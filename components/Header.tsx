@@ -16,7 +16,7 @@ export default function Header() {
               L
             </div>
             <span className="text-lg font-bold text-primary-900 tracking-tight">
-              Launch<span className="text-primary-500">Wise</span>
+              Launch<span className="text-primary-500">Pilot</span>
             </span>
           </Link>
 
@@ -33,6 +33,18 @@ export default function Header() {
               className="text-sm text-text-muted hover:text-primary-600 transition-colors"
             >
               Features
+            </Link>
+            <Link
+              href="/#pricing"
+              className="text-sm text-text-muted hover:text-primary-600 transition-colors"
+            >
+              Pricing
+            </Link>
+            <Link
+              href="/community"
+              className="text-sm text-text-muted hover:text-primary-600 transition-colors"
+            >
+              Community
             </Link>
             <Link
               href="/start"
@@ -77,6 +89,20 @@ export default function Header() {
                 className="px-3 py-2 rounded-lg text-sm text-text-muted hover:bg-gray-50 transition-colors"
               >
                 Features
+              </Link>
+              <Link
+                href="/#pricing"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2 rounded-lg text-sm text-text-muted hover:bg-gray-50 transition-colors"
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/community"
+                onClick={() => setMobileOpen(false)}
+                className="px-3 py-2 rounded-lg text-sm text-text-muted hover:bg-gray-50 transition-colors"
+              >
+                Community
               </Link>
               <Link
                 href="/start"

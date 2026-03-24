@@ -11,13 +11,11 @@ import {
 } from "@/lib/types";
 
 const STEPS = [
-  { id: 1, label: "You" },
-  { id: 2, label: "Idea" },
-  { id: 3, label: "Location" },
-  { id: 4, label: "Competition" },
-  { id: 5, label: "Branding" },
-  { id: 6, label: "Stage" },
-  { id: 7, label: "Review" },
+  { id: 1, label: "You & Your Idea" },
+  { id: 2, label: "Location" },
+  { id: 3, label: "Competition" },
+  { id: 4, label: "Details" },
+  { id: 5, label: "Review" },
 ];
 
 export default function IntakeForm() {
@@ -30,28 +28,25 @@ export default function IntakeForm() {
   const update = (fields: Partial<IntakeFormData>) =>
     setForm((prev) => ({ ...prev, ...fields }));
 
-  const next = () => setStep((s) => Math.min(s + 1, 7));
+  const next = () => setStep((s) => Math.min(s + 1, 5));
   const prev = () => setStep((s) => Math.max(s - 1, 1));
 
   const canAdvance = (): boolean => {
     switch (step) {
       case 1:
-        return form.userName.trim().length > 0;
-      case 2:
         return (
+          form.userName.trim().length > 0 &&
           form.businessIdea.trim().length > 10 &&
           form.productOrService !== "" &&
           form.industry !== ""
         );
-      case 3:
+      case 2:
         return form.city.trim().length > 0 && form.state !== "";
+      case 3:
+        return true;
       case 4:
-        return true;
-      case 5:
-        return true;
-      case 6:
         return form.stage !== "" && form.capitalRange !== "";
-      case 7:
+      case 5:
         return true;
       default:
         return false;
@@ -118,17 +113,18 @@ export default function IntakeForm() {
         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-primary-500 rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${((step - 1) / 6) * 100}%` }}
+            style={{ width: `${((step - 1) / 4) * 100}%` }}
           />
         </div>
       </div>
 
       {/* Form card */}
       <div className="bg-white rounded-2xl border border-border shadow-sm p-6 sm:p-8">
+        {/* Step 1: You & Your Idea (combined old steps 1+2) */}
         {step === 1 && (
           <StepWrapper
-            title="First, what's your name?"
-            subtitle="We'll use it to personalize your plan."
+            title="Tell us about you and your idea"
+            subtitle="We'll use this to personalize your plan. More detail = better results."
           >
             <Field label="Your Name" required>
               <input
@@ -140,14 +136,6 @@ export default function IntakeForm() {
                 autoFocus
               />
             </Field>
-          </StepWrapper>
-        )}
-
-        {step === 2 && (
-          <StepWrapper
-            title="What's your business idea?"
-            subtitle="Don't worry about being perfect — just tell us the basics."
-          >
             <Field label="Business Name" hint="Skip this if you haven't decided">
               <input
                 type="text"
@@ -161,7 +149,7 @@ export default function IntakeForm() {
               <textarea
                 value={form.businessIdea}
                 onChange={(e) => update({ businessIdea: e.target.value })}
-                placeholder="What do you want to build? Who is it for? What problem does it solve? More detail = better results."
+                placeholder="What do you want to build? Who is it for? What problem does it solve?"
                 className="input-field min-h-[120px] resize-y"
                 rows={4}
               />
@@ -200,7 +188,8 @@ export default function IntakeForm() {
           </StepWrapper>
         )}
 
-        {step === 3 && (
+        {/* Step 2: Location */}
+        {step === 2 && (
           <StepWrapper
             title="Where will you operate?"
             subtitle="This helps us look up local licensing and find nearby competitors."
@@ -241,7 +230,8 @@ export default function IntakeForm() {
           </StepWrapper>
         )}
 
-        {step === 4 && (
+        {/* Step 3: Competition */}
+        {step === 3 && (
           <StepWrapper
             title="Do you know your competition?"
             subtitle="It's okay if you don't — we'll still research them for you."
@@ -286,11 +276,47 @@ export default function IntakeForm() {
           </StepWrapper>
         )}
 
-        {step === 5 && (
+        {/* Step 4: Details (combined old steps 5+6: Branding + Stage) */}
+        {step === 4 && (
           <StepWrapper
-            title="Let's talk branding"
-            subtitle="We'll give you honest feedback on your name and logo."
+            title="A few more details"
+            subtitle="This helps us tailor the roadmap to where you are right now."
           >
+            <Field label="Current Stage" required>
+              <div className="grid grid-cols-3 gap-2">
+                {([
+                  { val: "idea" as const, label: "Just an Idea" },
+                  { val: "planning" as const, label: "Planning" },
+                  { val: "started" as const, label: "Already Started" },
+                ]).map((opt) => (
+                  <button
+                    key={opt.val}
+                    onClick={() => update({ stage: opt.val })}
+                    className={`px-3 py-3 rounded-xl border text-sm font-medium text-center transition-all ${
+                      form.stage === opt.val
+                        ? "border-primary-500 bg-primary-50 text-primary-700"
+                        : "border-gray-200 hover:border-gray-300 text-text-muted"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </Field>
+            <Field label="How much capital do you have?" required>
+              <select
+                value={form.capitalRange}
+                onChange={(e) => update({ capitalRange: e.target.value })}
+                className="input-field"
+              >
+                <option value="">Select a range</option>
+                {CAPITAL_RANGES.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </Field>
             <Field label="Do you have a logo?">
               <div className="flex gap-2">
                 {[true, false].map((val) => (
@@ -367,50 +393,8 @@ export default function IntakeForm() {
           </StepWrapper>
         )}
 
-        {step === 6 && (
-          <StepWrapper
-            title="Where are you in the process?"
-            subtitle="This helps us tailor the roadmap to where you are right now."
-          >
-            <Field label="Current Stage" required>
-              <div className="grid grid-cols-3 gap-2">
-                {([
-                  { val: "idea" as const, label: "Just an Idea" },
-                  { val: "planning" as const, label: "Planning" },
-                  { val: "started" as const, label: "Already Started" },
-                ]).map((opt) => (
-                  <button
-                    key={opt.val}
-                    onClick={() => update({ stage: opt.val })}
-                    className={`px-3 py-3 rounded-xl border text-sm font-medium text-center transition-all ${
-                      form.stage === opt.val
-                        ? "border-primary-500 bg-primary-50 text-primary-700"
-                        : "border-gray-200 hover:border-gray-300 text-text-muted"
-                    }`}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </Field>
-            <Field label="How much capital do you have?" required>
-              <select
-                value={form.capitalRange}
-                onChange={(e) => update({ capitalRange: e.target.value })}
-                className="input-field"
-              >
-                <option value="">Select a range</option>
-                {CAPITAL_RANGES.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </select>
-            </Field>
-          </StepWrapper>
-        )}
-
-        {step === 7 && (
+        {/* Step 5: Review + Email Capture */}
+        {step === 5 && (
           <StepWrapper
             title="Looking good — ready to go?"
             subtitle="Double-check your info, then hit the button below."
@@ -427,6 +411,22 @@ export default function IntakeForm() {
               <ReviewItem label="Capital" value={form.capitalRange} />
               {form.hasLogo && <ReviewItem label="Logo" value="Uploaded" />}
               {form.hasWebsite && <ReviewItem label="Website" value={form.websiteUrl} />}
+            </div>
+
+            {/* Email capture */}
+            <div className="mt-6 pt-5 border-t border-gray-100">
+              <Field label="Where should we send your plan?" hint="Optional">
+                <input
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => update({ email: e.target.value })}
+                  placeholder="you@example.com"
+                  className="input-field"
+                />
+              </Field>
+              <p className="text-xs text-text-muted mt-2">
+                We&apos;ll email you a copy so you don&apos;t lose it. No spam, ever.
+              </p>
             </div>
           </StepWrapper>
         )}
@@ -453,7 +453,7 @@ export default function IntakeForm() {
           ) : (
             <div />
           )}
-          {step < 7 ? (
+          {step < 5 ? (
             <button
               onClick={next}
               disabled={!canAdvance()}

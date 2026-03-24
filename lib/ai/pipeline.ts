@@ -5,7 +5,7 @@ import type {
   BusinessProfile,
   IdeaAnalysis,
   LocalRequirement,
-  Competitor,
+  CompetitiveLandscape,
   BrandingFeedback,
   RoadmapStep,
   NinetyDayPlan,
@@ -138,19 +138,22 @@ export async function runAIPipeline(
     })
   );
 
-  // Parse Module 4: Competitors
-  const competitorParsed = safeParseJSON(competitorRaw, "Competitor Analysis");
-  const competitors: Competitor[] = (competitorParsed?.competitors || []).map(
-    (c: { name?: string; rating?: number; reviewCount?: number; distance?: string; website?: string; instagram?: string; strengths?: string[] }) => ({
-      name: c.name || "Unknown",
-      rating: c.rating || 0,
-      reviewCount: c.reviewCount || 0,
-      distance: c.distance || undefined,
-      website: c.website || undefined,
-      instagram: c.instagram || undefined,
-      strengths: c.strengths || [],
-    })
-  );
+  // Parse Module 4: Competitive Landscape
+  const competitorParsed = safeParseJSON(competitorRaw, "Competitive Landscape");
+  const competitiveLandscape: CompetitiveLandscape = {
+    overview: competitorParsed?.overview || "Unable to assess competitive landscape.",
+    saturationLevel: (competitorParsed?.saturationLevel as CompetitiveLandscape["saturationLevel"]) || "moderate",
+    competitorTypes: (competitorParsed?.competitorTypes || []).map(
+      (ct: { type?: string; prevalence?: string; typicalStrengths?: string[] }) => ({
+        type: ct.type || "General competitors",
+        prevalence: ct.prevalence || "Unknown prevalence",
+        typicalStrengths: ct.typicalStrengths || [],
+      })
+    ),
+    marketGaps: competitorParsed?.marketGaps || [],
+    positioningAssessment: competitorParsed?.positioningAssessment || "Unable to assess positioning.",
+    advice: competitorParsed?.advice || [],
+  };
 
   // Parse Module 5: Branding
   const brandingParsed = safeParseJSON(brandingRaw, "Branding Critique");
@@ -244,7 +247,7 @@ export async function runAIPipeline(
     profile,
     ideaAnalysis,
     localRequirements,
-    competitors,
+    competitiveLandscape,
     branding,
     roadmap,
     ninetyDayPlan,

@@ -17,7 +17,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
-  title: "LaunchWise — AI-Powered Startup Navigator",
+  title: "LaunchPilot — AI-Powered Startup Navigator",
   description:
     "Turn your business idea into a personalized launch plan. AI analyzes your idea, finds local requirements, discovers competitors, and gives you a step-by-step startup roadmap.",
 };

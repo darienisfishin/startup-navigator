@@ -4,7 +4,7 @@ import type {
   BusinessProfile,
   IdeaAnalysis,
   LocalRequirement,
-  Competitor,
+  CompetitiveLandscape,
   BrandingFeedback,
   RoadmapStep,
   NinetyDayPlan,
@@ -210,7 +210,7 @@ export function generateMockReport(intake: IntakeFormData): StartupReport {
   const profile = generateProfile(intake, quality);
   const ideaAnalysis = generateIdeaAnalysis(intake, quality);
   const localRequirements = generateLocalRequirements(intake, quality);
-  const competitors = generateCompetitors(intake, quality);
+  const competitiveLandscape = generateCompetitiveLandscape(intake, quality);
   const branding = generateBranding(intake, quality);
   const roadmap = generateRoadmap(intake, quality);
   const ninetyDayPlan = generateNinetyDayPlan(intake, quality);
@@ -224,7 +224,7 @@ export function generateMockReport(intake: IntakeFormData): StartupReport {
     profile,
     ideaAnalysis,
     localRequirements,
-    competitors,
+    competitiveLandscape,
     branding,
     roadmap,
     ninetyDayPlan,
@@ -470,55 +470,58 @@ function generateLocalRequirements(intake: IntakeFormData, quality: InputQuality
   return requirements;
 }
 
-function generateCompetitors(intake: IntakeFormData, quality: InputQuality): Competitor[] {
-  if (quality.locationScore < 30 || quality.ideaScore < 20) {
-    return [
-      {
-        name: "Unable to generate competitor analysis",
-        rating: 0,
-        reviewCount: 0,
-        strengths: ["Provide a valid city, state, and business description to see competitor insights"],
-      },
-    ];
-  }
-
+function generateCompetitiveLandscape(intake: IntakeFormData, quality: InputQuality): CompetitiveLandscape {
   const city = intake.city || "your area";
   const industry = intake.industry || "Business";
+  const shortIndustry = industry.split("/")[0].trim();
 
-  return [
-    {
-      name: `${industry.split("/")[0].trim()} Pro ${city}`,
-      rating: 4.5,
-      reviewCount: 127,
-      distance: "2.3 miles",
-      website: "https://example.com",
-      instagram: "@competitor1",
-      strengths: ["Established reputation", "Strong online presence", "Wide service area"],
-    },
-    {
-      name: `${city} ${industry.split("/")[0].trim()} Co.`,
-      rating: 4.2,
-      reviewCount: 89,
-      distance: "4.1 miles",
-      strengths: ["Competitive pricing", "Good reviews", "Local partnerships"],
-    },
-    {
-      name: `Premier ${industry.split("/")[0].trim()} LLC`,
-      rating: 3.8,
-      reviewCount: 45,
-      distance: "5.7 miles",
-      website: "https://example.com",
-      strengths: ["Established since 2015", "Business clients"],
-    },
-    {
-      name: `${city} Elite ${industry.split("/")[0].trim()}`,
-      rating: 4.7,
-      reviewCount: 203,
-      distance: "3.2 miles",
-      instagram: "@competitor4",
-      strengths: ["Premium positioning", "Excellent reviews", "Strong social media"],
-    },
-  ];
+  if (quality.locationScore < 30 || quality.ideaScore < 20) {
+    return {
+      overview: "Unable to assess competitive landscape. Provide a valid city, state, and business description for insights.",
+      saturationLevel: "moderate",
+      competitorTypes: [],
+      marketGaps: [],
+      positioningAssessment: "Insufficient data to assess positioning.",
+      advice: ["Complete your business details for a full landscape analysis."],
+    };
+  }
+
+  return {
+    overview: `The ${shortIndustry.toLowerCase()} market in ${city}, ${intake.state} shows moderate competition with room for differentiated newcomers. Most established players compete on reputation and convenience rather than innovation, leaving openings for businesses with a clear unique value proposition.`,
+    saturationLevel: "moderate",
+    competitorTypes: [
+      {
+        type: "Established local businesses",
+        prevalence: "Several well-known operators in the area",
+        typicalStrengths: ["Strong local reputation", "Existing customer base", "Established vendor relationships"],
+      },
+      {
+        type: "Chain / franchise locations",
+        prevalence: "A few national brands present",
+        typicalStrengths: ["Brand recognition", "Marketing budget", "Standardized operations"],
+      },
+      {
+        type: "Independent newcomers",
+        prevalence: "Growing number of new entrants",
+        typicalStrengths: ["Modern branding", "Social media savvy", "Niche focus"],
+      },
+    ],
+    marketGaps: [
+      "Limited options for premium or specialized offerings",
+      "Few competitors with strong digital presence",
+      "Underserved demand for personalized customer experience",
+      "Opportunity for modern branding and community engagement",
+    ],
+    positioningAssessment: intake.differentiator
+      ? `Your differentiator — "${intake.differentiator}" — could carve out a meaningful niche if executed well. Focus on making this the centerpiece of your marketing and customer experience.`
+      : `Without a clear differentiator defined yet, you'll want to identify what sets you apart before launch. Consider what the existing players aren't doing well and build your positioning around that gap.`,
+    advice: [
+      "Study what existing businesses in your area are missing — that's your opportunity",
+      "Build a strong online presence early, since many local competitors are weak here",
+      "Focus on a specific niche rather than trying to serve everyone",
+      "Collect reviews and testimonials from day one to build credibility fast",
+    ],
+  };
 }
 
 function generateBranding(intake: IntakeFormData, quality: InputQuality): BrandingFeedback {

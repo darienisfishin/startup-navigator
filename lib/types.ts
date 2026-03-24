@@ -5,6 +5,7 @@
 export interface IntakeFormData {
   // Personal
   userName: string;
+  email: string;
 
   // Business basics
   businessName: string;
@@ -35,6 +36,7 @@ export interface IntakeFormData {
 
 export const INITIAL_FORM_DATA: IntakeFormData = {
   userName: "",
+  email: "",
   businessName: "",
   businessIdea: "",
   productOrService: "",
@@ -200,14 +202,17 @@ export interface LocalRequirement {
   category: "registration" | "licensing" | "tax" | "zoning" | "health" | "other";
 }
 
-export interface Competitor {
-  name: string;
-  rating: number;
-  reviewCount: number;
-  distance?: string;
-  website?: string;
-  instagram?: string;
-  strengths: string[];
+export interface CompetitiveLandscape {
+  overview: string;
+  saturationLevel: "low" | "moderate" | "high" | "very high";
+  competitorTypes: {
+    type: string;
+    prevalence: string;
+    typicalStrengths: string[];
+  }[];
+  marketGaps: string[];
+  positioningAssessment: string;
+  advice: string[];
 }
 
 export interface BrandingFeedback {
@@ -287,7 +292,7 @@ export interface StartupReport {
   profile: BusinessProfile;
   ideaAnalysis: IdeaAnalysis;
   localRequirements: LocalRequirement[];
-  competitors: Competitor[];
+  competitiveLandscape: CompetitiveLandscape;
   branding: BrandingFeedback;
   roadmap: RoadmapStep[];
   ninetyDayPlan: NinetyDayPlan;

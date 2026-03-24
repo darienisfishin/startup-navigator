@@ -178,7 +178,7 @@ export function buildCompetitorAnalysisPrompt(
   intake: IntakeFormData,
   normalizedProfile: string
 ): string {
-  return `You are a competitive intelligence analyst. Your job is to assess the competitive landscape for a new business based on its industry, location, and positioning.
+  return `You are a competitive intelligence analyst. Your job is to assess the competitive LANDSCAPE for a new business — not list specific businesses.
 
 BUSINESS DETAILS:
 - Business Idea: "${intake.businessIdea}"
@@ -191,35 +191,31 @@ NORMALIZED PROFILE:
 ${normalizedProfile}
 
 YOUR TASK:
-1. Based on the industry and location, identify 4-6 TYPES of competitors this business would face (you don't have real-time data, so describe the competitive landscape realistically)
-2. For any competitors the user listed, assess them if you have knowledge about them
-3. Identify market gaps and opportunities
-4. Assess the user's competitive positioning honestly
+1. Describe the competitive landscape — how crowded is this market in this location?
+2. Identify 3-5 TYPES of competitors (e.g., "established local bakeries", "franchise chains", "home-based bakers") — do NOT name specific businesses
+3. For each type, describe how common they are and their typical strengths
+4. Identify market gaps and underserved opportunities
+5. Honestly assess whether the founder's differentiator gives them an edge
 
 IMPORTANT:
-- Do NOT fabricate specific competitor names or ratings you don't know
-- DO describe the types of competitors that typically exist in this industry/location
-- Be honest about whether the user's differentiator actually creates competitive advantage
-- If the user's idea is in a saturated market, say so
+- Do NOT name specific businesses, ratings, or review counts — you don't have real-time data
+- DO describe the general competitive environment, types of players, and market dynamics
+- Be honest. If the market is saturated, say so. If there's a clear gap, highlight it.
 
 RESPOND WITH ONLY THIS JSON:
 {
-  "competitiveLandscape": "2-3 paragraph assessment of the competitive environment in this industry and location",
-  "competitors": [
+  "overview": "2-3 paragraph narrative assessment of the competitive environment in this industry and location",
+  "saturationLevel": "low" | "moderate" | "high" | "very high",
+  "competitorTypes": [
     {
-      "name": "competitor name (use user-listed ones if provided, or describe type like 'Established local bakeries')",
-      "rating": 0-5 (use 0 if unknown),
-      "reviewCount": 0 (use 0 if unknown),
-      "distance": "estimated or null",
-      "website": "if known, otherwise null",
-      "instagram": "if known, otherwise null",
-      "strengths": ["2-3 likely strengths of this competitor type"],
-      "isUserListed": true/false
+      "type": "Name of competitor type (e.g., 'Established local bakeries')",
+      "prevalence": "One sentence on how common this type is in the area",
+      "typicalStrengths": ["2-3 typical strengths of this competitor type"]
     }
   ],
-  "marketGaps": ["2-4 specific opportunities this founder could exploit"],
-  "positioningAssessment": "honest assessment of whether the founder's stated differentiator is strong enough to compete",
-  "competitiveAdvice": ["3-4 specific tactical recommendations for standing out"]
+  "marketGaps": ["2-4 specific underserved opportunities this founder could exploit"],
+  "positioningAssessment": "Honest assessment of the founder's stated differentiator and whether it creates real competitive advantage",
+  "advice": ["3-4 specific tactical recommendations for standing out in this market"]
 }`;
 }
 

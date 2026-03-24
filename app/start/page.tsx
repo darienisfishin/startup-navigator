@@ -1,7 +1,7 @@
 import IntakeForm from "@/components/IntakeForm";
 
 export const metadata = {
-  title: "Start Your Plan — LaunchWise",
+  title: "Start Your Plan — LaunchPilot",
   description: "Answer a few questions and get a personalized startup roadmap powered by AI.",
 };
 
