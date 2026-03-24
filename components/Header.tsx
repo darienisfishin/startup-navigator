@@ -41,7 +41,7 @@ export default function Header() {
                 Features
               </Link>
               <Link
-                href="/#pricing"
+                href="/pricing"
                 className="text-sm text-text-muted hover:text-primary-600 transition-colors"
               >
                 Pricing
@@ -122,7 +122,7 @@ export default function Header() {
                   Features
                 </Link>
                 <Link
-                  href="/#pricing"
+                  href="/pricing"
                   onClick={() => setMobileOpen(false)}
                   className="px-3 py-2 rounded-lg text-sm text-text-muted hover:bg-gray-50 transition-colors"
                 >

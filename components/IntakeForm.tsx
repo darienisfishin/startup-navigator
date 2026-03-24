@@ -9,6 +9,11 @@ import {
   US_STATES,
   type IntakeFormData,
 } from "@/lib/types";
+import {
+  trackFormStart,
+  trackFormComplete,
+  trackReportGenerated,
+} from "@/lib/analytics";
 
 const STEPS = [
   { id: 1, label: "You & Your Idea" },
@@ -28,7 +33,10 @@ export default function IntakeForm() {
   const update = (fields: Partial<IntakeFormData>) =>
     setForm((prev) => ({ ...prev, ...fields }));
 
-  const next = () => setStep((s) => Math.min(s + 1, 5));
+  const next = () => {
+    if (step === 1) trackFormStart();
+    setStep((s) => Math.min(s + 1, 5));
+  };
   const prev = () => setStep((s) => Math.max(s - 1, 1));
 
   const canAdvance = (): boolean => {
@@ -56,6 +64,7 @@ export default function IntakeForm() {
   const handleSubmit = async () => {
     setSubmitting(true);
     setError("");
+    trackFormComplete();
     try {
       const res = await fetch("/api/analyze", {
         method: "POST",
@@ -64,6 +73,7 @@ export default function IntakeForm() {
       });
       if (!res.ok) throw new Error("Analysis failed");
       const data = await res.json();
+      trackReportGenerated();
       sessionStorage.setItem(`report_${data.id}`, JSON.stringify(data));
       router.push(`/report/${data.id}`);
     } catch {
