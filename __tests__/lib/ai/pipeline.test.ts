@@ -94,17 +94,18 @@ const complianceResponse = makeClaudeResponse({
 });
 
 const competitorResponse = makeClaudeResponse({
-  competitors: [
+  overview: "The gluten-free bakery market in Austin is growing.",
+  saturationLevel: "moderate",
+  competitorTypes: [
     {
-      name: "Local Bakeries",
-      rating: 4.2,
-      reviewCount: 150,
-      strengths: ["Established brand"],
+      type: "Local Bakeries",
+      prevalence: "Common in urban areas",
+      typicalStrengths: ["Established brand", "Loyal customers"],
     },
   ],
   marketGaps: ["No dedicated GF facility nearby"],
   positioningAssessment: "Strong differentiation.",
-  competitiveAdvice: ["Emphasize certification"],
+  advice: ["Emphasize certification"],
 });
 
 const brandingResponse = makeClaudeResponse({
@@ -269,11 +270,11 @@ describe("runAIPipeline", () => {
       expect(report.localRequirements[0].category).toBe("registration");
     });
 
-    it("returns competitors array from Module 4", async () => {
+    it("returns competitiveLandscape from Module 4", async () => {
       const report = await runAIPipeline(mockIntake);
-      expect(Array.isArray(report.competitors)).toBe(true);
-      expect(report.competitors[0].name).toBe("Local Bakeries");
-      expect(report.competitors[0].rating).toBe(4.2);
+      expect(Array.isArray(report.competitiveLandscape.competitorTypes)).toBe(true);
+      expect(report.competitiveLandscape.competitorTypes[0].type).toBe("Local Bakeries");
+      expect(Array.isArray(report.competitiveLandscape.marketGaps)).toBe(true);
     });
 
     it("returns branding.nameAnalysis from Module 5", async () => {
@@ -383,7 +384,7 @@ describe("runAIPipeline", () => {
       expect(report.viability.overallScore).toBe(50);
       // Arrays should be empty
       expect(report.localRequirements).toEqual([]);
-      expect(report.competitors).toEqual([]);
+      expect(report.competitiveLandscape.competitorTypes).toEqual([]);
       expect(report.partners).toEqual([]);
     });
   });

@@ -4,9 +4,14 @@ import { ReportEmail } from "./report-email";
 import { WelcomeEmail } from "./welcome-email";
 import type { StartupReport } from "@/lib/types";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy initialization to avoid build-time errors when RESEND_API_KEY is unset
+function getResend() {
+  const key = process.env.RESEND_API_KEY;
+  if (!key) throw new Error("RESEND_API_KEY environment variable is not set");
+  return new Resend(key);
+}
 
-const FROM = process.env.EMAIL_FROM ?? "LaunchWise <reports@launch-pilot.com>";
+const FROM = process.env.EMAIL_FROM ?? "LaunchPilot <reports@launch-pilot.com>";
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://launch-pilot.com";
 
 export interface SendReportEmailOptions {
@@ -18,10 +23,11 @@ export async function sendReportEmail({ to, report }: SendReportEmailOptions) {
   const reportUrl = `${APP_URL}/report/${report.id}`;
   const businessName = report.intake.businessName || `${report.intake.userName}'s Plan`;
 
+  const resend = getResend();
   const { data, error } = await resend.emails.send({
     from: FROM,
     to,
-    subject: `Your LaunchWise report: ${businessName} (${report.viability.overallScore}/100)`,
+    subject: `Your LaunchPilot report: ${businessName} (${report.viability.overallScore}/100)`,
     react: createElement(ReportEmail, { report, reportUrl }),
   });
 
@@ -40,10 +46,11 @@ export interface SendWelcomeEmailOptions {
 export async function sendWelcomeEmail({ to, userName }: SendWelcomeEmailOptions) {
   const startUrl = `${APP_URL}/start`;
 
+  const resend = getResend();
   const { data, error } = await resend.emails.send({
     from: FROM,
     to,
-    subject: "Welcome to LaunchWise — your startup navigator is ready",
+    subject: "Welcome to LaunchPilot — your startup navigator is ready",
     react: createElement(WelcomeEmail, { userName, startUrl }),
   });
 

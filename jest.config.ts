@@ -14,8 +14,12 @@ const customConfig: Config = {
     "^@/(.*)$": "<rootDir>/$1",
   },
   testMatch: [
-    "**/__tests__/**/*.test.ts",
-    "**/__tests__/**/*.test.tsx",
+    "<rootDir>/__tests__/**/*.test.ts",
+    "<rootDir>/__tests__/**/*.test.tsx",
+  ],
+  testPathIgnorePatterns: [
+    "/node_modules/",
+    "/.claude/",
   ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
 };

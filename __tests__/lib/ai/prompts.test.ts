@@ -139,9 +139,9 @@ describe("buildCompetitorAnalysisPrompt", () => {
     expect(prompt).toContain("Whole Foods bakery section");
   });
 
-  it("instructs to return competitors array with expected fields", () => {
+  it("instructs to return competitive landscape with expected fields", () => {
     const prompt = buildCompetitorAnalysisPrompt(mockIntake, normalizedProfile);
-    expect(prompt).toContain('"competitors"');
+    expect(prompt).toContain('"competitorTypes"');
     expect(prompt).toContain('"marketGaps"');
     expect(prompt).toContain('"positioningAssessment"');
   });

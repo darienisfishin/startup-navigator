@@ -88,7 +88,7 @@ export default async function SharedReportPage({ params }: Props) {
         <IdeaAnalysis analysis={report.ideaAnalysis} />
         <StartupRoadmap roadmap={report.roadmap} />
         <LocalRequirements requirements={report.localRequirements} />
-        <CompetitorSnapshot competitors={report.competitors} />
+        <CompetitorSnapshot landscape={report.competitiveLandscape} />
         <BrandingFeedback branding={report.branding} />
         <NinetyDayPlan plan={report.ninetyDayPlan} />
         <PartnerRecommendations partners={report.partners} />
