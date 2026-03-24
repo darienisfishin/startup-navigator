@@ -187,8 +187,74 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Pricing teaser */}
+      <section className="py-20 sm:py-24 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal>
+            <div className="text-center mb-10">
+              <h2 className="text-3xl sm:text-4xl font-bold text-primary-900">
+                Simple, one-time pricing
+              </h2>
+              <p className="mt-3 text-text-muted max-w-lg mx-auto">
+                No subscriptions. Pay once, get your full startup report — and
+                keep it forever.
+              </p>
+            </div>
+          </ScrollReveal>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 max-w-2xl mx-auto">
+            {[
+              { name: "Starter", price: "$9.99", href: "/pricing" },
+              { name: "Pro", price: "$29", href: "/pricing", highlighted: true },
+            ].map((tier, i) => (
+              <ScrollReveal key={tier.name} delay={i * 80}>
+                <div
+                  className={`rounded-2xl border p-6 text-center transition-shadow hover:shadow-md ${
+                    tier.highlighted
+                      ? "border-primary-400 bg-primary-50"
+                      : "border-border bg-surface"
+                  }`}
+                >
+                  <p className="text-sm font-semibold text-text-muted mb-1">
+                    {tier.name}
+                  </p>
+                  <p
+                    className={`text-4xl font-bold tracking-tight mb-4 ${
+                      tier.highlighted ? "text-primary-700" : "text-primary-900"
+                    }`}
+                  >
+                    {tier.price}
+                    <span className="text-base font-normal text-text-muted ml-1">
+                      one-time
+                    </span>
+                  </p>
+                  <Link
+                    href="/pricing"
+                    className={`inline-flex items-center justify-center gap-1.5 w-full px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
+                      tier.highlighted
+                        ? "bg-primary-600 text-white hover:bg-primary-700"
+                        : "bg-white border border-border text-primary-700 hover:bg-white/80"
+                    }`}
+                  >
+                    See what&apos;s included
+                  </Link>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+          <ScrollReveal delay={160}>
+            <p className="text-center text-sm text-text-muted mt-6">
+              Or{" "}
+              <Link href="/start" className="text-primary-600 hover:underline font-medium">
+                start for free
+              </Link>{" "}
+              — no credit card needed.
+            </p>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* Final CTA */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-surface">
         <div className="max-w-2xl mx-auto px-4 text-center">
           <ScrollReveal>
             <h2 className="text-3xl sm:text-4xl font-bold text-primary-900">
