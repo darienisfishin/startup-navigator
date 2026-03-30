@@ -19,9 +19,11 @@ export default function CheckoutButton({
   className,
 }: Props) {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleClick() {
     setLoading(true);
+    setError(null);
     trackPricingClick(tierId);
 
     try {
@@ -35,20 +37,27 @@ export default function CheckoutButton({
       if (data.url) {
         window.location.href = data.url;
       } else {
+        setError("Something went wrong. Please try again.");
         setLoading(false);
       }
     } catch {
+      setError("Something went wrong. Please try again.");
       setLoading(false);
     }
   }
 
   return (
-    <button
-      onClick={handleClick}
-      disabled={loading}
-      className={`${className ?? ""} disabled:opacity-60 disabled:cursor-not-allowed`}
-    >
-      {loading ? "Redirecting…" : children}
-    </button>
+    <div className="flex flex-col items-center gap-2">
+      <button
+        onClick={handleClick}
+        disabled={loading}
+        className={`${className ?? ""} disabled:opacity-60 disabled:cursor-not-allowed`}
+      >
+        {loading ? "Redirecting…" : children}
+      </button>
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
+    </div>
   );
 }

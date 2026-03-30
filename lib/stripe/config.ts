@@ -16,7 +16,7 @@ export const STRIPE_PRICING: StripePricingTier[] = [
     price: "$9.99",
     priceNote: "one-time",
     tagline: "Everything you need to validate your idea.",
-    stripePriceId: "price_1TGhPX5DoSVBksnOLlEc20aH",
+    stripePriceId: "price_1TGi2E7KHJcC4hkHP3ztZ68H",
     highlighted: false,
     features: [
       "Full AI-generated startup report",
@@ -35,7 +35,7 @@ export const STRIPE_PRICING: StripePricingTier[] = [
     price: "$29",
     priceNote: "one-time",
     tagline: "Deeper analysis for serious founders.",
-    stripePriceId: "price_1TGhQ75DoSVBksnOB8pRinNK",
+    stripePriceId: "price_1TGi2E7KHJcC4hkHiYp6bXrw",
     highlighted: true,
     features: [
       "Everything in Starter",
