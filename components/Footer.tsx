@@ -30,7 +30,7 @@ export default function Footer() {
                 {[
                   { label: "How It Works", href: "/#how-it-works" },
                   { label: "Features", href: "/#features" },
-                  { label: "Pricing", href: "/#pricing" },
+                  { label: "Pricing", href: "/pricing" },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link

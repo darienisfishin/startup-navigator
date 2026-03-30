@@ -20,9 +20,24 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.launch-pilot.com"),
   title: "LaunchPilot — AI-Powered Startup Navigator",
   description:
     "Turn your business idea into a personalized launch plan. AI analyzes your idea, finds local requirements, discovers competitors, and gives you a step-by-step startup roadmap.",
+  openGraph: {
+    title: "LaunchPilot — AI-Powered Startup Navigator",
+    description:
+      "Turn your business idea into a personalized launch plan. AI analyzes your idea, finds local requirements, discovers competitors, and gives you a step-by-step startup roadmap.",
+    type: "website",
+    url: "https://www.launch-pilot.com",
+    images: [{ url: "/og-image.png" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "LaunchPilot — AI-Powered Startup Navigator",
+    description:
+      "Turn your business idea into a personalized launch plan. AI analyzes your idea, finds local requirements, discovers competitors, and gives you a step-by-step startup roadmap.",
+  },
 };
 
 export default function RootLayout({

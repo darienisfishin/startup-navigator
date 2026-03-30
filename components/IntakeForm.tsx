@@ -123,7 +123,7 @@ export default function IntakeForm() {
         <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-primary-500 rounded-full transition-all duration-500 ease-out"
-            style={{ width: `${((step - 1) / 4) * 100}%` }}
+            style={{ width: `${(step / 5) * 100}%` }}
           />
         </div>
       </div>

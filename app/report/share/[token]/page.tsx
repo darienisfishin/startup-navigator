@@ -42,7 +42,7 @@ export default async function SharedReportPage({ params }: Props) {
     <div className="min-h-screen bg-surface">
       {/* Shared report banner */}
       <div className="bg-indigo-600 text-white py-2 px-4 text-center text-xs font-medium">
-        This is a shared LaunchWise report &mdash;{" "}
+        This is a shared LaunchPilot report &mdash;{" "}
         <Link href="/start" className="underline hover:no-underline font-semibold">
           Create your own free analysis →
         </Link>

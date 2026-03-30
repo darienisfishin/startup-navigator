@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Community | LaunchPilot",
+  title: "Community — LaunchPilot",
   description:
     "Join the LaunchPilot Founders Community on Discord — connect with entrepreneurs, get feedback on your ideas, and grow together.",
 };
@@ -51,7 +51,7 @@ const VIP_PERKS = [
     emoji: "⭐",
     title: "VIP Founders Channel",
     description:
-      "Access a private channel for Full Report members — deeper discussions, direct Q&A, and a tighter-knit group of serious founders.",
+      "Access a private channel for Pro members — deeper discussions, direct Q&A, and a tighter-knit group of serious founders.",
   },
   {
     emoji: "🎯",
@@ -99,8 +99,9 @@ export default function CommunityPage() {
             The <strong className="text-white">LaunchPilot Founders Community</strong> is a free Discord server where new entrepreneurs connect, share ideas, ask questions, and grow together. Because starting a business is hard enough — you shouldn&apos;t have to figure it all out by yourself.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* TODO: Replace with real Discord invite link */}
             <a
-              href="#"
+              href="https://discord.gg/launchpilot"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-[#5865F2] text-white text-lg font-bold hover:bg-[#4752C4] transition-colors shadow-xl"
             >
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -109,7 +110,7 @@ export default function CommunityPage() {
               Join the Community — Free
             </a>
             <Link
-              href="/#pricing"
+              href="/pricing"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl border border-white/20 text-white text-lg font-medium hover:bg-white/10 transition-colors backdrop-blur-sm"
             >
               Get VIP Access
@@ -198,13 +199,13 @@ export default function CommunityPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <span className="inline-block px-4 py-1.5 rounded-full bg-accent-50 text-accent-600 text-sm font-semibold mb-4">
-              Full Report Members Only
+              Pro Members Only
             </span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-primary-900">
               VIP Founders Access
             </h2>
             <p className="mt-3 text-text-muted max-w-2xl mx-auto text-lg">
-              Purchase the <strong className="text-primary-900">Full Report ($24.99)</strong> and unlock exclusive VIP perks in the community. It&apos;s like going from the lobby to the boardroom.
+              Purchase the <strong className="text-primary-900">Pro ($29)</strong> and unlock exclusive VIP perks in the community. It&apos;s like going from the lobby to the boardroom.
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-3xl mx-auto">
@@ -282,8 +283,9 @@ export default function CommunityPage() {
             Join hundreds of entrepreneurs who are building their businesses together. The community is free. The connections are priceless.
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* TODO: Replace with real Discord invite link */}
             <a
-              href="#"
+              href="https://discord.gg/launchpilot"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-[#5865F2] text-white text-lg font-bold hover:bg-[#4752C4] transition-colors shadow-xl"
             >
               <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">

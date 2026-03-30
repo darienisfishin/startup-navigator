@@ -5,7 +5,7 @@ import { PRICING_TIERS } from "@/lib/pricing";
 import PricingCard from "@/components/PricingCard";
 
 export const metadata: Metadata = {
-  title: "Pricing — LaunchWise",
+  title: "Pricing — LaunchPilot",
   description:
     "Simple, one-time pricing. Get a complete AI-powered startup report — no subscriptions, no surprises.",
 };

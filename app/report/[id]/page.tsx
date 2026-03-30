@@ -292,7 +292,7 @@ export default function ReportPage() {
               </p>
             </div>
 
-            <div className="hidden sm:flex items-center gap-2 shrink-0">
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
               {/* Save indicator */}
               {user && savedToDb && (
                 <span className="inline-flex items-center gap-1 text-xs text-emerald-600 font-medium">
@@ -302,6 +302,17 @@ export default function ReportPage() {
                   Saved
                 </span>
               )}
+
+              {/* Email Report button */}
+              <button
+                onClick={openEmailModal}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-text-muted hover:bg-surface transition-colors"
+              >
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Email Report
+              </button>
 
               {/* Share button — only for logged-in users with a saved report */}
               {user && supabaseId && (
@@ -366,7 +377,30 @@ export default function ReportPage() {
       </div>
 
       {/* Report content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex gap-8">
+          {/* Sticky sidebar nav — desktop only */}
+          <aside className="hidden lg:block w-40 flex-shrink-0">
+            <nav className="sticky top-20 space-y-0.5">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-text-muted px-3 pb-2">Sections</p>
+              {NAV_SECTIONS.map(({ id, label }) => (
+                <a
+                  key={id}
+                  href={`#${id}`}
+                  className={`block px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
+                    activeSection === id
+                      ? "bg-primary-50 text-primary-700"
+                      : "text-text-muted hover:text-primary-700 hover:bg-gray-50"
+                  }`}
+                >
+                  {label}
+                </a>
+              ))}
+            </nav>
+          </aside>
+
+          {/* Main report content */}
+          <div className="flex-1 min-w-0 space-y-6">
         {/* Disclaimer */}
         <div className="p-3 rounded-xl bg-amber-50/70 border border-amber-100">
           <p className="text-xs text-amber-700 text-center">
@@ -465,14 +499,14 @@ export default function ReportPage() {
                     </a>
                   </div>
 
-                  {/* Full Report */}
+                  {/* Pro */}
                   <div className="border-2 border-primary-500 rounded-xl p-5 text-left relative">
                     <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-primary-500 text-white text-[10px] font-semibold">
                       Best Value
                     </div>
-                    <h3 className="text-base font-bold text-primary-900">Full Report</h3>
+                    <h3 className="text-base font-bold text-primary-900">Pro</h3>
                     <div className="mt-1 mb-3">
-                      <span className="text-2xl font-bold text-primary-900">$24.99</span>
+                      <span className="text-2xl font-bold text-primary-900">$29</span>
                       <span className="text-text-muted text-xs ml-1">one-time</span>
                     </div>
                     <ul className="space-y-1.5 mb-4">
@@ -499,7 +533,7 @@ export default function ReportPage() {
                       href="https://launchpilot.buildr.bet/checkout/4adcea4b-dacf-40ac-b04e-051449a9c6cb"
                       className="block w-full text-center px-4 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-md shadow-primary-200"
                     >
-                      Get Full Report — $24.99
+                      Get Pro — $29
                     </a>
                   </div>
                 </div>
@@ -509,6 +543,8 @@ export default function ReportPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
           </div>
         </div>
       </div>

@@ -19,7 +19,7 @@ const customConfig: Config = {
   ],
   testPathIgnorePatterns: [
     "/node_modules/",
-    "/.claude/",
+    "/.next/",
   ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
 };

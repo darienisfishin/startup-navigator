@@ -333,7 +333,7 @@ export default function HomePage() {
             <ScrollReveal>
               <div className="bg-white rounded-2xl border border-border p-8 h-full flex flex-col hover:shadow-lg transition-shadow">
                 <div className="mb-6">
-                  <h3 className="text-lg font-bold text-primary-900">Starter Report</h3>
+                  <h3 className="text-lg font-bold text-primary-900">Starter</h3>
                   <p className="text-sm text-text-muted mt-1">Perfect for a quick gut check</p>
                 </div>
                 <div className="mb-6">
@@ -342,10 +342,14 @@ export default function HomePage() {
                 </div>
                 <ul className="space-y-3 mb-8 flex-1">
                   {[
+                    { text: "Full AI-generated startup report", highlight: true },
                     { text: "Viability score (0–100)", highlight: true },
-                    { text: "Top 5 action steps", highlight: true },
-                    { text: "Idea analysis summary", highlight: false },
-                    { text: "Market landscape overview", highlight: false },
+                    { text: "Competitor snapshot (up to 5)", highlight: false },
+                    { text: "Local licensing & registration guide", highlight: false },
+                    { text: "Brand name critique", highlight: false },
+                    { text: "Step-by-step startup roadmap", highlight: false },
+                    { text: "90-day action plan", highlight: false },
+                    { text: "Partner & tool recommendations", highlight: false },
                   ].map((item) => (
                     <li key={item.text} className="flex items-start gap-2.5 text-sm">
                       <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -361,23 +365,23 @@ export default function HomePage() {
                   href="https://launchpilot.buildr.bet/checkout/afc5afd9-6080-4967-a2df-33a2e10219a1"
                   className="block w-full text-center px-6 py-3.5 rounded-xl border-2 border-primary-600 text-primary-600 font-bold hover:bg-primary-50 transition-colors"
                 >
-                  Get Starter Report
+                  Get Starter
                 </a>
               </div>
             </ScrollReveal>
 
-            {/* Full Report */}
+            {/* Pro */}
             <ScrollReveal delay={100}>
               <div className="bg-white rounded-2xl border-2 border-primary-500 p-8 h-full flex flex-col relative shadow-xl shadow-primary-100">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-primary-500 to-accent-500 text-white text-xs font-bold shadow-md">
                   Most Popular
                 </div>
                 <div className="mb-6">
-                  <h3 className="text-lg font-bold text-primary-900">Full Report</h3>
+                  <h3 className="text-lg font-bold text-primary-900">Pro</h3>
                   <p className="text-sm text-text-muted mt-1">Your complete startup launch playbook</p>
                 </div>
                 <div className="mb-6">
-                  <span className="text-4xl font-extrabold text-primary-900">$24.99</span>
+                  <span className="text-4xl font-extrabold text-primary-900">$29</span>
                   <span className="text-text-muted text-sm ml-1">one-time</span>
                   <div className="mt-1">
                     <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">Save vs $2,000+ consultant</span>
@@ -408,7 +412,7 @@ export default function HomePage() {
                   href="https://launchpilot.buildr.bet/checkout/4adcea4b-dacf-40ac-b04e-051449a9c6cb"
                   className="block w-full text-center px-6 py-3.5 rounded-xl bg-gradient-to-r from-primary-600 to-accent-500 text-white font-bold hover:from-primary-700 hover:to-accent-600 transition-all shadow-lg shadow-primary-200"
                 >
-                  Get Full Report
+                  Get Pro Report
                 </a>
               </div>
             </ScrollReveal>
@@ -611,11 +615,11 @@ export default function HomePage() {
               },
               {
                 q: "Is my business idea kept private?",
-                a: "100%. We don't store your submissions, save your report data, or share your idea with anyone. Your inputs are processed in real time and discarded. Your idea is yours alone.",
+                a: "Your data is only stored if you create an account to save your reports. We never share your ideas with anyone. Your idea is yours alone.",
               },
               {
                 q: "What's the difference between Starter and Full Report?",
-                a: "Starter ($9.99) gives you the viability score, idea analysis, top action steps, and market overview — great for a quick gut check. Full Report ($24.99) adds the 90-day week-by-week plan, local licensing checklist, competitive landscape deep-dive, brand critique, partner tool recommendations, and PDF export. Most people go with the Full Report.",
+                a: "Starter ($9.99) gives you the viability score, idea analysis, top action steps, and market overview — great for a quick gut check. Pro ($29) adds the 90-day week-by-week plan, local licensing checklist, competitive landscape deep-dive, brand critique, partner tool recommendations, and PDF export. Most people go with Pro.",
               },
               {
                 q: "How long does it take to get my report?",
