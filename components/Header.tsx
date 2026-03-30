@@ -52,6 +52,12 @@ export default function Header() {
               >
                 Community
               </Link>
+              <Link
+                href="/blog"
+                className="text-sm text-text-muted hover:text-primary-600 transition-colors"
+              >
+                Blog
+              </Link>
 
               {!loading && (
                 <>
@@ -134,6 +140,13 @@ export default function Header() {
                   className="px-3 py-2 rounded-lg text-sm text-text-muted hover:bg-gray-50 transition-colors"
                 >
                   Community
+                </Link>
+                <Link
+                  href="/blog"
+                  onClick={() => setMobileOpen(false)}
+                  className="px-3 py-2 rounded-lg text-sm text-text-muted hover:bg-gray-50 transition-colors"
+                >
+                  Blog
                 </Link>
                 {!loading && user && (
                   <Link
