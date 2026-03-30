@@ -1,6 +1,8 @@
 import Link from "next/link";
 import ScrollReveal from "@/components/ScrollReveal";
 import SampleReport from "@/components/SampleReport";
+import CheckoutButton from "@/components/CheckoutButton";
+import { PRICING_TIERS } from "@/lib/pricing";
 
 const FEATURES = [
   {
@@ -361,12 +363,13 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="https://launchpilot.buildr.bet/checkout/afc5afd9-6080-4967-a2df-33a2e10219a1"
+                <CheckoutButton
+                  priceId={PRICING_TIERS[0].stripePriceId}
+                  tierId="starter"
                   className="block w-full text-center px-6 py-3.5 rounded-xl border-2 border-primary-600 text-primary-600 font-bold hover:bg-primary-50 transition-colors"
                 >
                   Get Starter
-                </a>
+                </CheckoutButton>
               </div>
             </ScrollReveal>
 
@@ -408,12 +411,13 @@ export default function HomePage() {
                     </li>
                   ))}
                 </ul>
-                <a
-                  href="https://launchpilot.buildr.bet/checkout/4adcea4b-dacf-40ac-b04e-051449a9c6cb"
+                <CheckoutButton
+                  priceId={PRICING_TIERS[1].stripePriceId}
+                  tierId="pro"
                   className="block w-full text-center px-6 py-3.5 rounded-xl bg-gradient-to-r from-primary-600 to-accent-500 text-white font-bold hover:from-primary-700 hover:to-accent-600 transition-all shadow-lg shadow-primary-200"
                 >
                   Get Pro Report
-                </a>
+                </CheckoutButton>
               </div>
             </ScrollReveal>
           </div>

@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
+import CheckoutButton from "@/components/CheckoutButton";
+import { PRICING_TIERS } from "@/lib/pricing";
 
 export const metadata: Metadata = {
   title: "Community — LaunchPilot",
@@ -225,15 +227,16 @@ export default function CommunityPage() {
             ))}
           </div>
           <div className="text-center mt-10">
-            <a
-              href="https://launchpilot.buildr.bet/checkout/4adcea4b-dacf-40ac-b04e-051449a9c6cb"
+            <CheckoutButton
+              priceId={PRICING_TIERS[1].stripePriceId}
+              tierId="pro"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl bg-gradient-to-r from-primary-600 to-accent-500 text-white text-lg font-bold hover:from-primary-700 hover:to-accent-600 transition-all shadow-lg shadow-primary-200"
             >
               Get Full Report + VIP Access
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
               </svg>
-            </a>
+            </CheckoutButton>
             <p className="mt-3 text-sm text-text-muted">
               One-time payment. Lifetime community access.
             </p>

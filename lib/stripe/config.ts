@@ -1,4 +1,4 @@
-export interface PricingTier {
+export interface StripePricingTier {
   id: string;
   name: string;
   price: string;
@@ -9,7 +9,7 @@ export interface PricingTier {
   features: string[];
 }
 
-export const PRICING_TIERS: PricingTier[] = [
+export const STRIPE_PRICING: StripePricingTier[] = [
   {
     id: "starter",
     name: "Starter",
@@ -49,3 +49,8 @@ export const PRICING_TIERS: PricingTier[] = [
     ],
   },
 ];
+
+/** Look up a tier by its Stripe price ID */
+export function getTierByPriceId(priceId: string): StripePricingTier | undefined {
+  return STRIPE_PRICING.find((t) => t.stripePriceId === priceId);
+}

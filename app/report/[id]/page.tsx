@@ -15,6 +15,8 @@ import NinetyDayPlan from "@/components/report/NinetyDayPlan";
 import PartnerRecommendations from "@/components/report/PartnerRecommendations";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
+import CheckoutButton from "@/components/CheckoutButton";
+import { PRICING_TIERS } from "@/lib/pricing";
 
 const NAV_SECTIONS = [
   { id: "viability", label: "Viability" },
@@ -491,12 +493,14 @@ export default function ReportPage() {
                         </li>
                       ))}
                     </ul>
-                    <a
-                      href="https://launchpilot.buildr.bet/checkout/afc5afd9-6080-4967-a2df-33a2e10219a1"
+                    <CheckoutButton
+                      priceId={PRICING_TIERS[0].stripePriceId}
+                      tierId="starter"
+                      reportId={supabaseId ?? undefined}
                       className="block w-full text-center px-4 py-2.5 rounded-xl border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-50 transition-colors"
                     >
                       Get Starter — $9.99
-                    </a>
+                    </CheckoutButton>
                   </div>
 
                   {/* Pro */}
@@ -529,17 +533,19 @@ export default function ReportPage() {
                         </li>
                       ))}
                     </ul>
-                    <a
-                      href="https://launchpilot.buildr.bet/checkout/4adcea4b-dacf-40ac-b04e-051449a9c6cb"
+                    <CheckoutButton
+                      priceId={PRICING_TIERS[1].stripePriceId}
+                      tierId="pro"
+                      reportId={supabaseId ?? undefined}
                       className="block w-full text-center px-4 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-md shadow-primary-200"
                     >
                       Get Pro — $29
-                    </a>
+                    </CheckoutButton>
                   </div>
                 </div>
 
                 <p className="text-xs text-text-muted">
-                  Secure checkout powered by BUILDR. Your idea stays private.
+                  Secure checkout powered by Stripe. Your idea stays private.
                 </p>
               </div>
             </div>
