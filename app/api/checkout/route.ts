@@ -21,7 +21,8 @@ export async function POST(req: NextRequest) {
     } = await supabase.auth.getUser();
 
     const appUrl =
-      process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+      process.env.NEXT_PUBLIC_APP_URL ||
+      (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://www.launch-pilot.com");
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
