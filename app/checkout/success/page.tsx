@@ -2,7 +2,6 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
 
 function SuccessContent() {
   const searchParams = useSearchParams();
@@ -25,32 +24,54 @@ function SuccessContent() {
       .finally(() => setLoading(false));
   }, [sessionId]);
 
+  // Auto-redirect to the report page once we have the reportId.
+  // Pass session_id so the report page can immediately verify payment
+  // without waiting for the Stripe webhook to update Supabase.
+  useEffect(() => {
+    if (!reportId || !sessionId) return;
+    const timer = setTimeout(() => {
+      window.location.href = `/report/${reportId}?session_id=${sessionId}`;
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [reportId, sessionId]);
+
   if (loading) {
     return (
       <div className="w-8 h-8 border-2 border-primary-200 border-t-primary-500 rounded-full animate-spin mx-auto" />
     );
   }
 
-  return reportId ? (
-    <Link
-      href={`/report/${reportId}`}
-      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors shadow-lg shadow-primary-200"
-    >
-      View Your Report
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-      </svg>
-    </Link>
-  ) : (
-    <Link
-      href="/start"
-      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors shadow-lg shadow-primary-200"
-    >
-      Start Your Analysis
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-      </svg>
-    </Link>
+  if (reportId) {
+    return (
+      <div className="flex flex-col items-center gap-3">
+        <p className="text-sm text-text-muted">Redirecting to your report…</p>
+        <div className="w-5 h-5 border-2 border-primary-200 border-t-primary-500 rounded-full animate-spin" />
+        <a
+          href={`/report/${reportId}?session_id=${sessionId}`}
+          className="mt-1 text-sm text-primary-600 hover:underline"
+        >
+          Click here if not redirected
+        </a>
+      </div>
+    );
+  }
+
+  // No reportId — user came from the pricing page directly (no report yet)
+  return (
+    <div className="flex flex-col items-center gap-3">
+      <p className="text-sm text-text-muted">
+        Your payment was received! Now generate your report to unlock it.
+      </p>
+      <a
+        href="/start"
+        className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl bg-primary-600 text-white font-semibold hover:bg-primary-700 transition-colors shadow-lg shadow-primary-200"
+      >
+        Generate Your Report
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+        </svg>
+      </a>
+    </div>
   );
 }
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import type { StartupReport } from "@/lib/types";
 import ViabilityScore from "@/components/report/ViabilityScore";
@@ -16,6 +16,7 @@ import PartnerRecommendations from "@/components/report/PartnerRecommendations";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { createClient } from "@/lib/supabase/client";
 import CheckoutButton from "@/components/CheckoutButton";
+import LoginModal from "@/components/auth/LoginModal";
 import { PRICING_TIERS } from "@/lib/pricing";
 
 const NAV_SECTIONS = [
@@ -42,10 +43,13 @@ type EmailModalState = "closed" | "open" | "sending" | "success" | "error";
 export default function ReportPage() {
   const params = useParams();
   const id = params.id as string;
+  const searchParams = useSearchParams();
   const { user } = useAuth();
 
   const [report, setReport] = useState<StartupReport | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isPaid, setIsPaid] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Supabase report ID (may differ from local sessionStorage ID)
   const [supabaseId, setSupabaseId] = useState<string | null>(null);
@@ -69,6 +73,11 @@ export default function ReportPage() {
   // ── Load report ──────────────────────────────────────────────
   useEffect(() => {
     const loadReport = async () => {
+      // Check sessionStorage for a paid flag set by the success page redirect
+      if (sessionStorage.getItem(`paid_${id}`) === "true") {
+        setIsPaid(true);
+      }
+
       // 1. Try sessionStorage first (fastest, works for fresh reports)
       const stored = sessionStorage.getItem(`report_${id}`);
       if (stored) {
@@ -81,11 +90,11 @@ export default function ReportPage() {
       const cachedDbId = sessionStorage.getItem(`report_supabase_id_${id}`);
       if (cachedDbId) setSupabaseId(cachedDbId);
 
-      // 3. Try Supabase by ID (covers "My Reports" navigation)
+      // 3. Try Supabase by ID (covers "My Reports" navigation and post-payment redirects)
       const supabase = createClient();
       const { data } = await supabase
         .from("reports")
-        .select("id, report_data")
+        .select("id, report_data, paid")
         .eq("id", id)
         .maybeSingle();
 
@@ -93,6 +102,7 @@ export default function ReportPage() {
         setReport(data.report_data as StartupReport);
         setSupabaseId(data.id);
         setSavedToDb(true);
+        if (data.paid) setIsPaid(true);
       }
 
       setLoading(false);
@@ -100,6 +110,23 @@ export default function ReportPage() {
 
     loadReport();
   }, [id]);
+
+  // ── Verify payment via Stripe session_id (doesn't depend on webhook timing) ──
+  useEffect(() => {
+    const sessionId = searchParams?.get("session_id");
+    if (!sessionId || isPaid) return;
+
+    fetch(`/api/checkout/session?session_id=${sessionId}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (data?.paymentStatus === "paid") {
+          setIsPaid(true);
+          // Persist so refreshing the page keeps the report unlocked
+          sessionStorage.setItem(`paid_${id}`, "true");
+        }
+      })
+      .catch(() => {});
+  }, [searchParams, id, isPaid]);
 
   // ── Auto-save to Supabase when logged in ─────────────────────
   useEffect(() => {
@@ -419,10 +446,9 @@ export default function ReportPage() {
           <BusinessSummary intake={report.intake} profile={report.profile} />
         </div>
 
-        {/* BLURRED: Everything else behind paywall */}
-        <div className="relative">
-          {/* Blurred report sections */}
-          <div className="blur-sm select-none pointer-events-none opacity-60 space-y-6">
+        {/* PAID SECTIONS — shown normally when paid, blurred + paywalled otherwise */}
+        <div className={isPaid ? "" : "relative"}>
+          <div className={isPaid ? "space-y-6" : "blur-sm select-none pointer-events-none opacity-60 space-y-6"}>
             <div id="analysis">
               <IdeaAnalysis analysis={report.ideaAnalysis} />
             </div>
@@ -452,108 +478,149 @@ export default function ReportPage() {
             </div>
           </div>
 
-          {/* Paywall overlay */}
-          <div className="absolute inset-0 flex items-start justify-center bg-gradient-to-b from-white/30 via-white/90 to-white pt-16 sm:pt-24">
-            <div className="max-w-2xl w-full mx-4">
-              <div className="bg-white rounded-2xl border border-border shadow-xl p-8 sm:p-10 text-center">
-                <div className="w-12 h-12 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-primary-900 mb-2">
-                  Your full report is ready
-                </h2>
-                <p className="text-text-muted text-sm mb-8 max-w-md mx-auto">
-                  Unlock your complete launch plan — market analysis, local licensing checklist, brand critique, 90-day action plan, and more.
-                </p>
+          {/* Paywall overlay — only shown when not paid */}
+          {!isPaid && (
+            <div className="absolute inset-0 flex items-start justify-center bg-gradient-to-b from-white/30 via-white/90 to-white pt-16 sm:pt-24">
+              <div className="max-w-2xl w-full mx-4">
+                <div className="bg-white rounded-2xl border border-border shadow-xl p-8 sm:p-10 text-center">
+                  <div className="w-12 h-12 rounded-2xl bg-primary-100 text-primary-600 flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                  </div>
+                  <h2 className="text-2xl font-bold text-primary-900 mb-2">
+                    Your full report is ready
+                  </h2>
+                  <p className="text-text-muted text-sm mb-8 max-w-md mx-auto">
+                    Unlock your complete launch plan — market analysis, local licensing checklist, brand critique, 90-day action plan, and more.
+                  </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                  {/* Starter */}
-                  <div className="border border-border rounded-xl p-5 text-left">
-                    <h3 className="text-base font-bold text-primary-900">Starter</h3>
-                    <div className="mt-1 mb-3">
-                      <span className="text-2xl font-bold text-primary-900">$9.99</span>
-                      <span className="text-text-muted text-xs ml-1">one-time</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                    {/* Starter */}
+                    <div className="border border-border rounded-xl p-5 text-left">
+                      <h3 className="text-base font-bold text-primary-900">Starter</h3>
+                      <div className="mt-1 mb-3">
+                        <span className="text-2xl font-bold text-primary-900">$9.99</span>
+                        <span className="text-text-muted text-xs ml-1">one-time</span>
+                      </div>
+                      <ul className="space-y-1.5 mb-4">
+                        {[
+                          { text: "Viability score", highlight: true },
+                          { text: "Top 5 action steps", highlight: true },
+                          { text: "Idea analysis", highlight: false },
+                          { text: "Market landscape", highlight: false },
+                        ].map((item) => (
+                          <li key={item.text} className="flex items-center gap-1.5 text-xs">
+                            <svg className="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span className={item.highlight ? "font-semibold text-primary-900" : "text-text-muted"}>
+                              {item.text}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      {!user ? (
+                        <button
+                          onClick={() => setShowLoginModal(true)}
+                          className="block w-full text-center px-4 py-2.5 rounded-xl border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-50 transition-colors"
+                        >
+                          Sign in to pay — $9.99
+                        </button>
+                      ) : !supabaseId ? (
+                        <button
+                          disabled
+                          className="block w-full text-center px-4 py-2.5 rounded-xl border-2 border-primary-300 text-primary-400 text-sm font-semibold cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          <span className="w-3.5 h-3.5 border-2 border-primary-300 border-t-primary-500 rounded-full animate-spin" />
+                          Saving report…
+                        </button>
+                      ) : (
+                        <CheckoutButton
+                          priceId={PRICING_TIERS[0].stripePriceId}
+                          tierId="starter"
+                          reportId={supabaseId}
+                          className="block w-full text-center px-4 py-2.5 rounded-xl border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-50 transition-colors"
+                        >
+                          Get Starter — $9.99
+                        </CheckoutButton>
+                      )}
                     </div>
-                    <ul className="space-y-1.5 mb-4">
-                      {[
-                        { text: "Viability score", highlight: true },
-                        { text: "Top 5 action steps", highlight: true },
-                        { text: "Idea analysis", highlight: false },
-                        { text: "Market landscape", highlight: false },
-                      ].map((item) => (
-                        <li key={item.text} className="flex items-center gap-1.5 text-xs">
-                          <svg className="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span className={item.highlight ? "font-semibold text-primary-900" : "text-text-muted"}>
-                            {item.text}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    <CheckoutButton
-                      priceId={PRICING_TIERS[0].stripePriceId}
-                      tierId="starter"
-                      reportId={supabaseId ?? undefined}
-                      className="block w-full text-center px-4 py-2.5 rounded-xl border-2 border-primary-600 text-primary-600 text-sm font-semibold hover:bg-primary-50 transition-colors"
-                    >
-                      Get Starter — $9.99
-                    </CheckoutButton>
+
+                    {/* Pro */}
+                    <div className="border-2 border-primary-500 rounded-xl p-5 text-left relative">
+                      <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-primary-500 text-white text-[10px] font-semibold">
+                        Best Value
+                      </div>
+                      <h3 className="text-base font-bold text-primary-900">Pro</h3>
+                      <div className="mt-1 mb-3">
+                        <span className="text-2xl font-bold text-primary-900">$29</span>
+                        <span className="text-text-muted text-xs ml-1">one-time</span>
+                      </div>
+                      <ul className="space-y-1.5 mb-4">
+                        {[
+                          { text: "Everything in Starter", highlight: false },
+                          { text: "90-day week-by-week plan", highlight: true },
+                          { text: "Local licensing checklist", highlight: true },
+                          { text: "Full competitive landscape", highlight: true },
+                          { text: "Brand critique", highlight: false },
+                          { text: "VIP Founders Community", highlight: true },
+                          { text: "Partner tools + PDF export", highlight: false },
+                        ].map((item) => (
+                          <li key={item.text} className="flex items-center gap-1.5 text-xs">
+                            <svg className="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span className={item.highlight ? "font-semibold text-primary-900" : "text-text-muted"}>
+                              {item.text}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                      {!user ? (
+                        <button
+                          onClick={() => setShowLoginModal(true)}
+                          className="block w-full text-center px-4 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-md shadow-primary-200"
+                        >
+                          Sign in to pay — $29
+                        </button>
+                      ) : !supabaseId ? (
+                        <button
+                          disabled
+                          className="block w-full text-center px-4 py-2.5 rounded-xl bg-primary-300 text-white text-sm font-semibold cursor-not-allowed flex items-center justify-center gap-2"
+                        >
+                          <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                          Saving report…
+                        </button>
+                      ) : (
+                        <CheckoutButton
+                          priceId={PRICING_TIERS[1].stripePriceId}
+                          tierId="pro"
+                          reportId={supabaseId}
+                          className="block w-full text-center px-4 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-md shadow-primary-200"
+                        >
+                          Get Pro — $29
+                        </CheckoutButton>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Pro */}
-                  <div className="border-2 border-primary-500 rounded-xl p-5 text-left relative">
-                    <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full bg-primary-500 text-white text-[10px] font-semibold">
-                      Best Value
-                    </div>
-                    <h3 className="text-base font-bold text-primary-900">Pro</h3>
-                    <div className="mt-1 mb-3">
-                      <span className="text-2xl font-bold text-primary-900">$29</span>
-                      <span className="text-text-muted text-xs ml-1">one-time</span>
-                    </div>
-                    <ul className="space-y-1.5 mb-4">
-                      {[
-                        { text: "Everything in Starter", highlight: false },
-                        { text: "90-day week-by-week plan", highlight: true },
-                        { text: "Local licensing checklist", highlight: true },
-                        { text: "Full competitive landscape", highlight: true },
-                        { text: "Brand critique", highlight: false },
-                        { text: "VIP Founders Community", highlight: true },
-                        { text: "Partner tools + PDF export", highlight: false },
-                      ].map((item) => (
-                        <li key={item.text} className="flex items-center gap-1.5 text-xs">
-                          <svg className="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                          </svg>
-                          <span className={item.highlight ? "font-semibold text-primary-900" : "text-text-muted"}>
-                            {item.text}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                    <CheckoutButton
-                      priceId={PRICING_TIERS[1].stripePriceId}
-                      tierId="pro"
-                      reportId={supabaseId ?? undefined}
-                      className="block w-full text-center px-4 py-2.5 rounded-xl bg-primary-600 text-white text-sm font-semibold hover:bg-primary-700 transition-colors shadow-md shadow-primary-200"
-                    >
-                      Get Pro — $29
-                    </CheckoutButton>
-                  </div>
+                  <p className="text-xs text-text-muted">
+                    Secure checkout powered by Stripe. Your idea stays private.
+                  </p>
                 </div>
-
-                <p className="text-xs text-text-muted">
-                  Secure checkout powered by Stripe. Your idea stays private.
-                </p>
               </div>
             </div>
-          </div>
+          )}
         </div>
           </div>
         </div>
       </div>
+
+      {/* Login modal — shown when guest tries to pay */}
+      {showLoginModal && (
+        <LoginModal onClose={() => setShowLoginModal(false)} />
+      )}
 
       {/* Email report modal */}
       {emailModal !== "closed" && (

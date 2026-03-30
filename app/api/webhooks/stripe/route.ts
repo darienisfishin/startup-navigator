@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe/server";
-import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/server";
 import Stripe from "stripe";
 
 // TODO: Set STRIPE_WEBHOOK_SECRET in your environment variables
@@ -32,27 +32,31 @@ export async function POST(req: NextRequest) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
-    const { reportId, userId } = session.metadata ?? {};
+    const { reportId } = session.metadata ?? {};
 
-    if (reportId && userId) {
+    if (reportId) {
       try {
-        const supabase = await createClient();
+        // Use service role client to bypass RLS — webhook has no auth context
+        const supabase = createServiceRoleClient();
         const { error } = await supabase
           .from("reports")
           .update({
             paid: true,
             stripe_session_id: session.id,
           })
-          .eq("id", reportId)
-          .eq("user_id", userId);
+          .eq("id", reportId);
 
         if (error) {
           console.error("[stripe-webhook] failed to update report:", error.message);
+        } else {
+          console.log("[stripe-webhook] marked report paid:", reportId);
         }
       } catch (err) {
         const message = err instanceof Error ? err.message : "Unknown error";
         console.error("[stripe-webhook] supabase error:", message);
       }
+    } else {
+      console.warn("[stripe-webhook] checkout.session.completed but no reportId in metadata, session:", session.id);
     }
   }
 
