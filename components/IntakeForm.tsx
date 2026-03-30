@@ -425,18 +425,34 @@ export default function IntakeForm() {
 
             {/* Email capture */}
             <div className="mt-6 pt-5 border-t border-gray-100">
-              <Field label="Where should we send your plan?" hint="Optional">
-                <input
-                  type="email"
-                  value={form.email}
-                  onChange={(e) => update({ email: e.target.value })}
-                  placeholder="you@example.com"
-                  className="input-field"
-                />
-              </Field>
-              <p className="text-xs text-text-muted mt-2">
-                We&apos;ll email you a copy so you don&apos;t lose it. No spam, ever.
-              </p>
+              <div className="bg-primary-50 border border-primary-100 rounded-xl p-4">
+                <Field label="Get your report delivered + 3 bonus launch tips" hint="Optional">
+                  <input
+                    type="email"
+                    value={form.email}
+                    onChange={(e) => update({ email: e.target.value })}
+                    placeholder="you@example.com"
+                    className="input-field mt-1"
+                  />
+                </Field>
+                <p className="text-xs text-text-muted mt-2 mb-3">
+                  We&apos;ll send your full report as a PDF + exclusive startup tips. No spam, unsubscribe anytime.
+                </p>
+                <ul className="space-y-1">
+                  {[
+                    "Report PDF delivered to your inbox",
+                    "3 bonus launch tips",
+                    "No spam, ever",
+                  ].map((benefit) => (
+                    <li key={benefit} className="flex items-center gap-1.5 text-xs text-primary-700">
+                      <svg className="w-3.5 h-3.5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </StepWrapper>
         )}

@@ -82,7 +82,7 @@ export default function LoginModal({ onClose }: LoginModalProps) {
                 L
               </div>
               <span className="font-bold text-primary-900 text-sm tracking-tight">
-                Launch<span className="text-primary-500">Wise</span>
+                Launch<span className="text-primary-500">Pilot</span>
               </span>
             </div>
             <button

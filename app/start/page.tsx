@@ -16,6 +16,12 @@ export default function StartPage() {
           <p className="mt-2 text-text-muted text-sm max-w-md mx-auto">
             Answer a few questions and we&apos;ll create a personalized roadmap for your business.
           </p>
+          <p className="mt-3 text-sm text-text-muted">
+            Preview your viability score free.{" "}
+            <a href="/pricing" className="text-primary-600 hover:underline font-medium">
+              Unlock your full personalized report for just $9.99.
+            </a>
+          </p>
         </div>
         <IntakeForm />
       </div>
