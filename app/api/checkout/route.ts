@@ -5,9 +5,10 @@ import { createClient } from "@/lib/supabase/server";
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { priceId, reportId } = body as {
+    const { priceId, reportId, tierId } = body as {
       priceId: string;
       reportId?: string;
+      tierId?: string;
     };
 
     if (!priceId || typeof priceId !== "string") {
@@ -34,6 +35,7 @@ export async function POST(req: NextRequest) {
         priceId,
         reportId: reportId ?? "",
         userId: user?.id ?? "",
+        tierId: tierId ?? "",
       },
       success_url: `${appUrl}/checkout/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/pricing`,

@@ -30,7 +30,7 @@ export default function CheckoutButton({
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ priceId, reportId }),
+        body: JSON.stringify({ priceId, reportId, tierId }),
       });
 
       const data = await res.json();

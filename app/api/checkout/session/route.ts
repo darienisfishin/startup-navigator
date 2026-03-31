@@ -14,7 +14,8 @@ export async function GET(req: NextRequest) {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     const reportId = session.metadata?.reportId || null;
-    return NextResponse.json({ reportId, paymentStatus: session.payment_status });
+    const tierId = session.metadata?.tierId || null;
+    return NextResponse.json({ reportId, paymentStatus: session.payment_status, tierId });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Failed to retrieve session";
     console.error("[checkout/session] error:", message);

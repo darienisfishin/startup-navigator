@@ -18,42 +18,54 @@ export default function PartnerRecommendations({
   partners: PartnerRecommendation[];
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-border shadow-sm p-8">
-      <h2 className="text-xl font-bold text-primary-900 mb-2 flex items-center gap-2">
-        <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
-        </svg>
-        Recommended Tools & Services
-      </h2>
-      <p className="text-text-muted text-sm mb-6">
-        Curated tools matched to your specific business needs.
-      </p>
+    <div className="bg-white rounded-2xl border border-emerald-100 shadow-md p-8 sm:p-10 animate-fade-in-up">
+      {/* Section header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h2
+            className="text-3xl font-bold text-primary-900"
+            style={{ fontFamily: "var(--font-accent)" }}
+          >
+            Recommended Tools &amp; Services
+          </h2>
+        </div>
+        <div className="h-1 w-24 rounded-full bg-gradient-to-r from-emerald-400 to-green-500 ml-15 mt-2" />
+        <p className="text-text-muted text-sm mt-3">
+          Curated tools matched to your specific business needs.
+        </p>
+      </div>
 
       {/* Trust note */}
-      <div className="p-4 rounded-xl bg-green-50 border border-green-200 mb-6">
-        <p className="text-xs text-green-800">
+      <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 mb-8 flex items-start gap-3">
+        <span className="text-emerald-600 text-lg flex-shrink-0">✓</span>
+        <p className="text-xs text-emerald-800 leading-relaxed">
           Recommendations are based on your industry, business type, and stage. We only suggest
           tools that are genuinely relevant to your situation.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 stagger-children">
         {partners.map((partner, i) => {
           const iconPath = CATEGORY_ICONS[partner.category] || CATEGORY_ICONS["Domain & Hosting"];
           return (
             <div
               key={i}
-              className="p-5 rounded-xl bg-surface border border-border hover:border-primary-200 transition-colors card-hover"
+              className="p-5 rounded-2xl bg-surface border border-border hover:border-emerald-200 hover:bg-emerald-50/20 transition-colors card-hover"
             >
               <div className="flex items-start gap-3 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-11 h-11 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={iconPath} />
                   </svg>
                 </div>
                 <div>
                   <h3 className="text-sm font-bold text-primary-900">{partner.name}</h3>
-                  <span className="text-xs text-primary-500 font-medium">{partner.category}</span>
+                  <span className="text-xs text-emerald-600 font-medium">{partner.category}</span>
                 </div>
               </div>
               <p className="text-sm text-text-muted mb-2">{partner.description}</p>
@@ -62,7 +74,7 @@ export default function PartnerRecommendations({
                 href={partner.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs font-medium text-primary-600 hover:text-primary-700"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 hover:text-emerald-700"
               >
                 Learn more
                 <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,8 +86,7 @@ export default function PartnerRecommendations({
         })}
       </div>
 
-      {/* Disclosure */}
-      <p className="mt-6 text-xs text-text-muted text-center">
+      <p className="mt-8 text-xs text-text-muted text-center">
         Some links may be affiliate links. We only recommend tools we believe genuinely help
         founders. See our disclosure policy for details.
       </p>

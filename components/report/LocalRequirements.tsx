@@ -45,20 +45,31 @@ export default function LocalRequirements({
   requirements: LocalRequirement[];
 }) {
   return (
-    <div className="bg-white rounded-2xl border border-border shadow-sm p-8">
-      <h2 className="text-xl font-bold text-primary-900 mb-2 flex items-center gap-2">
-        <svg className="w-6 h-6 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-        Local Startup Requirements
-      </h2>
-      <p className="text-text-muted text-sm mb-6">
-        Location-specific steps based on your city, county, and state.
-      </p>
+    <div className="bg-white rounded-2xl border border-teal-100 shadow-md p-8 sm:p-10 animate-fade-in-up">
+      {/* Section header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-12 h-12 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h2
+            className="text-3xl font-bold text-primary-900"
+            style={{ fontFamily: "var(--font-accent)" }}
+          >
+            Local Startup Requirements
+          </h2>
+        </div>
+        <div className="h-1 w-24 rounded-full bg-gradient-to-r from-teal-400 to-cyan-500 ml-15 mt-2" />
+        <p className="text-text-muted text-sm mt-3">
+          Location-specific steps based on your city, county, and state.
+        </p>
+      </div>
 
       {/* Disclaimer */}
-      <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 mb-6">
+      <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 mb-8">
         <p className="text-xs text-amber-800">
           <strong>Important:</strong> Requirements vary by jurisdiction. Items marked
           &quot;Likely Required&quot; or &quot;Verify&quot; should be confirmed with the relevant
@@ -66,27 +77,27 @@ export default function LocalRequirements({
         </p>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 stagger-children">
         {requirements.map((req, i) => {
           const conf = CONFIDENCE_STYLES[req.confidence];
           return (
             <div
               key={i}
-              className="flex items-start gap-4 p-4 rounded-xl bg-surface border border-border hover:border-primary-200 transition-colors"
+              className="flex items-start gap-4 p-5 rounded-2xl bg-surface border border-border hover:border-teal-200 hover:bg-teal-50/30 transition-colors card-hover"
             >
-              <div className="w-10 h-10 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-11 h-11 rounded-xl bg-teal-100 text-teal-600 flex items-center justify-center flex-shrink-0 mt-0.5">
                 {CATEGORY_ICONS[req.category] || CATEGORY_ICONS.other}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-sm font-semibold text-primary-900">{req.task}</h3>
+                <div className="flex items-start justify-between gap-3 mb-1.5">
+                  <h3 className="text-sm font-bold text-primary-900">{req.task}</h3>
                   <span
                     className={`px-2.5 py-0.5 rounded-full text-xs font-medium border flex-shrink-0 ${conf.className}`}
                   >
                     {conf.label}
                   </span>
                 </div>
-                <p className="text-sm text-text-muted mt-1.5 leading-relaxed">
+                <p className="text-sm text-text-muted leading-relaxed">
                   {req.description}
                 </p>
                 {req.link && (
@@ -94,7 +105,7 @@ export default function LocalRequirements({
                     href={req.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-primary-600 hover:text-primary-700"
+                    className="inline-flex items-center gap-1 mt-2 text-xs font-medium text-teal-600 hover:text-teal-700"
                   >
                     Visit website
                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
