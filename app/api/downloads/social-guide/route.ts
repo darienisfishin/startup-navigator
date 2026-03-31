@@ -14,12 +14,6 @@ export async function POST(req: NextRequest) {
     const industry = report.intake.industry;
     const businessType = `${report.intake.productOrService === "both" ? "Product & Service" : report.intake.productOrService} — ${report.profile.customerType}`;
 
-    const ninetyDayPlan = report.ninetyDayPlan;
-
-    // Build week 1 social tasks from 90-day plan
-    const weekOneTasks = (ninetyDayPlan?.weekOne || []).slice(0, 4);
-    const monthOneTasks = (ninetyDayPlan?.monthOne || []).slice(0, 4);
-
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -272,7 +266,6 @@ export async function POST(req: NextRequest) {
       <div class="day-row"><div class="day-label">Thursday</div><div class="day-content"><span class="post-tag ig-tag">IG Story</span> Poll or Q&amp;A — ask followers a question about your industry or their needs.</div></div>
       <div class="day-row"><div class="day-label">Friday</div><div class="day-content"><span class="post-tag fb-tag">FB</span><span class="post-tag ig-tag">IG</span> <strong>Educational post</strong> — share 3 tips related to ${industry} that your customers would find valuable.</div></div>
       <div class="day-row"><div class="day-label">Weekend</div><div class="day-content"><span class="post-tag ig-tag">IG Story</span> Casual content — a personal moment, progress update, or motivational quote. Keep it real.</div></div>
-      ${weekOneTasks.map((task) => `<div class="day-row"><div class="day-label" style="font-size:10px;color:#6366f1;">From your plan</div><div class="day-content" style="color:#4f46e5;">☐ ${task}</div></div>`).join("")}
     </div>
 
     <!-- Week 2 -->
@@ -290,7 +283,7 @@ export async function POST(req: NextRequest) {
       <div class="day-row"><div class="day-label">Monday</div><div class="day-content"><span class="post-tag fb-tag">FB</span><span class="post-tag ig-tag">IG</span> Ask your first customer or early supporter for a testimonial. Share it as a quote graphic.</div></div>
       <div class="day-row"><div class="day-label">Wednesday</div><div class="day-content"><span class="post-tag ig-tag">IG</span> <strong>FAQ post</strong> — answer the 3 most common questions about your business in a carousel.</div></div>
       <div class="day-row"><div class="day-label">Friday</div><div class="day-content"><span class="post-tag fb-tag">FB</span><span class="post-tag ig-tag">IG</span> <strong>Progress update</strong> — share what you've accomplished in your first 3 weeks. Celebrate milestones.</div></div>
-      ${monthOneTasks.map((task) => `<div class="day-row"><div class="day-label" style="font-size:10px;color:#6366f1;">From your plan</div><div class="day-content" style="color:#4f46e5;">☐ ${task}</div></div>`).join("")}
+      <div class="day-row"><div class="day-label">Weekend</div><div class="day-content"><span class="post-tag ig-tag">IG Story</span> Share a positive customer interaction or a moment that reminded you why you started. Authenticity builds trust.</div></div>
     </div>
 
     <!-- Week 4 -->
