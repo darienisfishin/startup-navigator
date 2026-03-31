@@ -15,20 +15,6 @@ export async function POST(req: NextRequest) {
     const startupCost = report.profile.startupCostEstimate || "Varies";
     const entity = report.profile.likelyBusinessType || "LLC";
 
-    const roadmapItems = (report.roadmap || [])
-      .map(
-        (step) => `
-        <div class="check-item">
-          <div class="checkbox"></div>
-          <div class="check-content">
-            <span class="check-title">${step.title}</span>
-            <span class="check-desc">${step.description}</span>
-            <span class="check-meta">${step.timeframe} · ${step.category} · ${step.priority}</span>
-          </div>
-        </div>`
-      )
-      .join("");
-
     const requirementsItems = (report.localRequirements || [])
       .map(
         (req) => `
@@ -212,13 +198,17 @@ export async function POST(req: NextRequest) {
     <div class="check-item"><div class="checkbox"></div><div class="check-content"><span class="check-title">Draft standard contracts or quotes</span><span class="check-desc">Use a template from LegalZoom or a local attorney to protect your work.</span></div></div>
   </div>
 
-  <!-- Your Roadmap -->
+  <!-- Digital Presence -->
   <div class="section">
     <div class="section-header">
-      <div class="section-icon">🗺️</div>
-      <div class="section-title">Your Personalized Action Plan</div>
+      <div class="section-icon">🌐</div>
+      <div class="section-title">Digital Presence</div>
     </div>
-    ${roadmapItems}
+    <div class="check-item"><div class="checkbox"></div><div class="check-content"><span class="check-title">Set up your Google Business Profile</span><span class="check-desc">Free at business.google.com. Critical for local search and Google Maps visibility.</span></div></div>
+    <div class="check-item"><div class="checkbox"></div><div class="check-content"><span class="check-title">Create a Facebook Business Page</span><span class="check-desc">Use a dedicated Business Page — not a personal profile. Add your hours, address, and website.</span></div></div>
+    <div class="check-item"><div class="checkbox"></div><div class="check-content"><span class="check-title">Set up an Instagram Business account</span><span class="check-desc">Switch to a Business or Creator account for analytics and ads. Connect it to your Facebook Page.</span></div></div>
+    <div class="check-item"><div class="checkbox"></div><div class="check-content"><span class="check-title">List your business on Yelp and Apple Maps</span><span class="check-desc">Free listings that increase discoverability for local customers.</span></div></div>
+    <div class="check-item"><div class="checkbox"></div><div class="check-content"><span class="check-title">Set up a professional business email</span><span class="check-desc">Use your domain (you@yourbusiness.com). Avoid using a personal Gmail for business.</span></div></div>
   </div>
 
   <!-- Budget -->
